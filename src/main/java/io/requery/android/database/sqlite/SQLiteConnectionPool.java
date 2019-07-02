@@ -152,7 +152,6 @@ public final class SQLiteConnectionPool implements Closeable {
         setMaxConnectionPoolSizeLocked();
     }
 
-    @SuppressWarnings("ThrowFromFinallyBlock")
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -644,13 +643,10 @@ public final class SQLiteConnectionPool implements Closeable {
 
         // Set up the cancellation listener.
         if (cancellationSignal != null) {
-            cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() {
-                @Override
-                public void onCancel() {
-                    synchronized (mLock) {
-                        if (waiter.mNonce == nonce) {
-                            cancelConnectionWaiterLocked(waiter);
-                        }
+            cancellationSignal.setOnCancelListener(() -> {
+                synchronized (mLock) {
+                    if (waiter.mNonce == nonce) {
+                        cancelConnectionWaiterLocked(waiter);
                     }
                 }
             });
@@ -811,7 +807,7 @@ public final class SQLiteConnectionPool implements Closeable {
                     if (connection != null) {
                         waiter.mAssignedConnection = connection;
                         unpark = true;
-                    } else if (nonPrimaryConnectionNotAvailable && primaryConnectionNotAvailable) {
+                    } else if (nonPrimaryConnectionNotAvailable) {
                         // There are no connections available and the pool is still open.
                         // We cannot fulfill any more connection requests, so stop here.
                         break;

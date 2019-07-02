@@ -185,7 +185,6 @@ public final class SQLiteConnection implements CancellationSignal.OnCancelListen
         mCloseGuard.open("close");
     }
 
-    @SuppressWarnings("ThrowFromFinallyBlock")
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -726,11 +725,7 @@ public final class SQLiteConnection implements CancellationSignal.OnCancelListen
                 try {
                     int fd = nativeExecuteForBlobFileDescriptor(
                             mConnectionPtr, statement.mStatementPtr);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                        return fd >= 0 ? ParcelFileDescriptor.adoptFd(fd) : null;
-                    } else {
-                        throw new UnsupportedOperationException();
-                    }
+                    return fd >= 0 ? ParcelFileDescriptor.adoptFd(fd) : null;
                 } finally {
                     detachCancellationSignal(cancellationSignal);
                 }
@@ -1030,11 +1025,7 @@ public final class SQLiteConnection implements CancellationSignal.OnCancelListen
         if (count != statement.mNumParameters) {
             String message = "Expected " + statement.mNumParameters + " bind arguments but "
                 + count + " were provided.";
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                throw new SQLiteBindOrColumnIndexOutOfRangeException(message);
-            } else {
-                throw new SQLiteException(message);
-            }
+            throw new SQLiteBindOrColumnIndexOutOfRangeException(message);
         }
         if (count == 0) {
             return;
@@ -1400,7 +1391,7 @@ public final class SQLiteConnection implements CancellationSignal.OnCancelListen
                         operation.mBindArgs.clear();
                     }
                     for (final Object arg : bindArgs) {
-                        if (arg != null && arg instanceof byte[]) {
+                        if (arg instanceof byte[]) {
                             // Don't hold onto the real byte array longer than necessary.
                             operation.mBindArgs.add(EMPTY_BYTE_ARRAY);
                         } else {

@@ -275,7 +275,6 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
         mConfigurationLocked = configuration;
     }
 
-    @SuppressWarnings("ThrowFromFinallyBlock")
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -616,7 +615,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
      */
     @Override
     public boolean yieldIfContendedSafely() {
-        return yieldIfContendedHelper(true /* check yielding */, -1 /* sleepAfterYieldDelay*/);
+        return yieldIfContendedHelper( /* check yielding */ -1 /* sleepAfterYieldDelay*/);
     }
 
     /**
@@ -632,13 +631,13 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
      */
     @Override
     public boolean yieldIfContendedSafely(long sleepAfterYieldDelay) {
-        return yieldIfContendedHelper(true /* check yielding */, sleepAfterYieldDelay);
+        return yieldIfContendedHelper( /* check yielding */ sleepAfterYieldDelay);
     }
 
-    private boolean yieldIfContendedHelper(boolean throwIfUnsafe, long sleepAfterYieldDelay) {
+    private boolean yieldIfContendedHelper(long sleepAfterYieldDelay) {
         acquireReference();
         try {
-            return getThreadSession().yieldTransaction(sleepAfterYieldDelay, throwIfUnsafe, null);
+            return getThreadSession().yieldTransaction(sleepAfterYieldDelay, true, null);
         } finally {
             releaseReference();
         }
@@ -759,12 +758,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
         File dir = file.getParentFile();
         if (dir != null) {
             final String prefix = file.getName() + "-mj";
-            final FileFilter filter = new FileFilter() {
-                @Override
-                public boolean accept(File candidate) {
-                    return candidate.getName().startsWith(prefix);
-                }
-            };
+            final FileFilter filter = candidate -> candidate.getName().startsWith(prefix);
             for (File masterJournal : dir.listFiles(filter)) {
                 deleted |= masterJournal.delete();
             }
@@ -1038,6 +1032,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
      * and {@link SQLiteProgram#bindLong} each time you want to run the
      * statement. Statements may not return result sets larger than 1x1.
      *<p>
+
      * No two threads should be using the same {@link SQLiteStatement} at the same time.
      *
      * @param sql The raw SQL statement, may contain ? for unknown values to be
@@ -1352,12 +1347,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
     public Cursor query(SupportSQLiteQuery supportQuery, android.os.CancellationSignal signal) {
         if (signal != null) {
             final CancellationSignal supportCancellationSignal = new CancellationSignal();
-            signal.setOnCancelListener(new android.os.CancellationSignal.OnCancelListener() {
-                @Override
-                public void onCancel() {
-                    supportCancellationSignal.cancel();
-                }
-            });
+            signal.setOnCancelListener(supportCancellationSignal::cancel);
             return query(supportQuery, supportCancellationSignal);
         } else {
             return query(supportQuery, (CancellationSignal) null);
@@ -1375,13 +1365,9 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
      * {@link Cursor}s are not synchronized, see the documentation for more details.
      */
     public Cursor query(final SupportSQLiteQuery supportQuery, CancellationSignal signal) {
-        return rawQueryWithFactory(new CursorFactory() {
-            @Override
-            public Cursor newCursor(SQLiteDatabase db, SQLiteCursorDriver masterQuery,
-                                    String editTable, SQLiteQuery query) {
-                supportQuery.bindTo(query);
-                return new SQLiteCursor(masterQuery, editTable, query);
-            }
+        return rawQueryWithFactory((db, masterQuery, editTable, query) -> {
+            supportQuery.bindTo(query);
+            return new SQLiteCursor(masterQuery, editTable, query);
         }, supportQuery.getSql(), new String[0], null, signal);
     }
 
@@ -1907,12 +1893,12 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
         executeSql(sql, bindArgs);
     }
 
-    private int executeSql(String sql, Object[] bindArgs) throws SQLException {
+    private void executeSql(String sql, Object[] bindArgs) throws SQLException {
         acquireReference();
         try {
             SQLiteStatement statement = new SQLiteStatement(this, sql, bindArgs);
             try {
-                return statement.executeUpdateDelete();
+                statement.executeUpdateDelete();
             } finally {
                 statement.close();
             }
@@ -2071,6 +2057,7 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
      * key constraints are enabled for the session.
      * </p><p>
      * A good time to call this method is right after calling {@link #openOrCreateDatabase}
+
      * or in the {@link SQLiteOpenHelper#onConfigure} callback.
      * </p><p>
      * When foreign key constraints are disabled, the database does not check whether
@@ -2281,9 +2268,9 @@ public final class SQLiteDatabase extends SQLiteClosable implements SupportSQLit
     }
 
     private static ArrayList<SQLiteDatabase> getActiveDatabases() {
-        ArrayList<SQLiteDatabase> databases = new ArrayList<>();
+        ArrayList<SQLiteDatabase> databases;
         synchronized (sActiveDatabases) {
-            databases.addAll(sActiveDatabases.keySet());
+            databases = new ArrayList<>(sActiveDatabases.keySet());
         }
         return databases;
     }

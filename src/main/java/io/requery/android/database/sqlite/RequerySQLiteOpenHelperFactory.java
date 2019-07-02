@@ -20,7 +20,7 @@ public final class RequerySQLiteOpenHelperFactory implements SupportSQLiteOpenHe
     }
 
     public RequerySQLiteOpenHelperFactory() {
-        this(Collections.<ConfigurationOptions>emptyList());
+        this(Collections.emptyList());
     }
 
     @Override

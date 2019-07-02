@@ -87,7 +87,6 @@ public class CursorWindow extends SQLiteClosable {
         }
     }
 
-    @SuppressWarnings("ThrowFromFinallyBlock")
     @Override
     protected void finalize() throws Throwable {
         try {

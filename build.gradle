@@ -1,18 +1,64 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'org.apache.httpcomponents:httpclient:4.5.7'
-    }
+plugins {
+    id 'de.undercouch.download' version '3.4.3'
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'de.undercouch.download'
+
+group = 'io.requery'
+version = '3.28.0'
+description = 'Android SQLite compatibility library'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 14
+        versionName project.version
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles 'proguard-rules.pro'
+        ndk {
+            abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+        }
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
+
+    libraryVariants.all {
+        it.generateBuildConfigProvider.configure { enabled = false }
+    }
+
+    packagingOptions {
+        pickFirst 'lib/armeabi-v7a/libsqlite3x.so'
+        pickFirst 'lib/arm64-v8a/libsqlite3x.so'
+        pickFirst 'lib/x86/libsqlite3x.so'
+        pickFirst 'lib/x86_64/libsqlite3x.so'
+    }
+
+}
+
+dependencies {
+    api 'androidx.sqlite:sqlite:2.0.1'
+    api 'androidx.core:core:1.0.2'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
 }

@@ -255,7 +255,7 @@ public abstract class AbstractCursor implements Cursor {
             columnName = columnName.substring(periodIndex + 1);
         }
 
-        String columnNames[] = getColumnNames();
+        String[] columnNames = getColumnNames();
         int length = columnNames.length;
         for (int i = 0; i < length; i++) {
             if (columnNames[i].equalsIgnoreCase(columnName)) {
@@ -306,18 +306,13 @@ public abstract class AbstractCursor implements Cursor {
      * Subclasses must call this method when they finish committing updates to notify all
      * observers.
      *
-     * @param selfChange value
      */
-    @SuppressWarnings("deprecation")
-    protected void onChange(boolean selfChange) {
+    protected void onChange() {
         synchronized (mSelfObserverLock) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mContentObservable.dispatchChange(selfChange, null);
+                mContentObservable.dispatchChange(false, null);
             } else {
-                mContentObservable.dispatchChange(selfChange);
-            }
-            if (mNotifyUri != null && selfChange) {
-                mContentResolver.notifyChange(mNotifyUri, mSelfObserver);
+                mContentObservable.dispatchChange(false);
             }
         }
     }
@@ -414,7 +409,7 @@ public abstract class AbstractCursor implements Cursor {
         public void onChange(boolean selfChange) {
             AbstractCursor cursor = mCursor.get();
             if (cursor != null) {
-                cursor.onChange(false);
+                cursor.onChange();
             }
         }
     }

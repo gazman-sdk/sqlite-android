@@ -1,9 +1,7 @@
-*.iml
-.idea
-.gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
 /build
-/captures
+/src/main/jniLibs
+/src/main/jni/sqlite/sqlite3.h
+/src/main/jni/sqlite/sqlite3.c
+/src/main/jni/sqlite.zip
+/src/main/obj
+.externalNativeBuild/

@@ -1,10 +1,12 @@
 package io.requery.android.database.sqlite;
 
 import android.content.Context;
+
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
-import io.requery.android.database.DatabaseErrorHandler;
 
 import java.util.Collections;
+
+import io.requery.android.database.DatabaseErrorHandler;
 
 /**
  * Implements {@link SupportSQLiteOpenHelper.Factory} using the SQLite implementation shipped in
@@ -64,7 +66,8 @@ public final class RequerySQLiteOpenHelperFactory implements SupportSQLiteOpenHe
             callback.onOpen(db);
         }
 
-        @Override protected SQLiteDatabaseConfiguration createConfiguration(String path, int openFlags) {
+        @Override
+        protected SQLiteDatabaseConfiguration createConfiguration(String path, int openFlags) {
             SQLiteDatabaseConfiguration config = super.createConfiguration(path, openFlags);
 
             for (ConfigurationOptions option : configurationOptions) {

@@ -24,7 +24,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.MediumTest;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
-import io.requery.android.database.sqlite.SQLiteDatabase;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -34,6 +33,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import io.requery.android.database.sqlite.SQLiteDatabase;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -45,13 +46,13 @@ public class DatabaseLocaleTest {
     private SQLiteDatabase mDatabase;
 
     private static final String[] STRINGS = {
-        "c\u00f4t\u00e9",
-        "cote",
-        "c\u00f4te",
-        "cot\u00e9",
-        "boy",
-        "dog",
-        "COTE",
+            "c\u00f4t\u00e9",
+            "cote",
+            "c\u00f4te",
+            "cot\u00e9",
+            "boy",
+            "dog",
+            "COTE",
     };
 
     @Before
@@ -108,7 +109,7 @@ public class DatabaseLocaleTest {
         // The database code currently uses PRIMARY collation strength,
         // meaning that all versions of a character compare equal (regardless
         // of case or accents), leaving the "cote" flavors in database order.
-        assertEquals(results, new String[] {
+        assertEquals(results, new String[]{
                 STRINGS[4],  // "boy"
                 STRINGS[0],  // sundry forms of "cote"
                 STRINGS[1],
@@ -124,16 +125,16 @@ public class DatabaseLocaleTest {
     public void testHoge() throws Exception {
         Cursor cursor = null;
         try {
-            String expectedString = new String(new int[] {0xFE000}, 0, 1);
+            String expectedString = new String(new int[]{0xFE000}, 0, 1);
             mDatabase.execSQL("INSERT INTO test(id, data) VALUES(1, '" + expectedString + "')");
             cursor = mDatabase.rawQuery("SELECT data FROM test WHERE id = 1", null);
-            
+
             assertNotNull(cursor);
             assertTrue(cursor.moveToFirst());
             String actualString = cursor.getString(0);
             assertEquals(expectedString.length(), actualString.length());
             for (int i = 0; i < expectedString.length(); i++) {
-                assertEquals((int)expectedString.charAt(i), (int)actualString.charAt(i));
+                assertEquals((int) expectedString.charAt(i), (int) actualString.charAt(i));
             }
             assertEquals(expectedString, actualString);
         } finally {

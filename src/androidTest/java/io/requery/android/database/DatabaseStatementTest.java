@@ -22,18 +22,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDoneException;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.MediumTest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.MediumTest;
+import java.io.File;
+
 import io.requery.android.database.sqlite.SQLiteDatabase;
 import io.requery.android.database.sqlite.SQLiteStatement;
-
-import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -47,7 +48,7 @@ public class DatabaseStatementTest {
     private static final String sString1 = "this is a test";
     private static final String sString2 = "and yet another test";
     private static final String sString3 = "this string is a little longer, but still a test";
-    
+
     private static final int CURRENT_DATABASE_VERSION = 42;
     private SQLiteDatabase mDatabase;
     private File mDatabaseFile;

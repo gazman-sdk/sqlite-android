@@ -18,22 +18,23 @@
 package io.requery.android.database.sqlite;
 
 import android.database.Cursor;
+
 import androidx.core.os.CancellationSignal;
 
 /**
  * A cursor driver that uses the given query directly.
- * 
+ *
  * @hide
  */
 public final class SQLiteDirectCursorDriver implements SQLiteCursorDriver {
     private final SQLiteDatabase mDatabase;
-    private final String mEditTable; 
+    private final String mEditTable;
     private final String mSql;
     private final CancellationSignal mCancellationSignal;
     private SQLiteQuery mQuery;
 
     public SQLiteDirectCursorDriver(SQLiteDatabase db, String sql, String editTable,
-            CancellationSignal cancellationSignal) {
+                                    CancellationSignal cancellationSignal) {
         mDatabase = db;
         mEditTable = editTable;
         mSql = sql;

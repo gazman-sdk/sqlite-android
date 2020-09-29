@@ -66,28 +66,28 @@ public final class SQLiteDatabaseConfiguration {
     /**
      * The maximum size of the prepared statement cache for each database connection.
      * Must be non-negative.
-     *
+     * <p>
      * Default is 25.
      */
     public int maxSqlCacheSize;
 
     /**
      * The database locale.
-     *
+     * <p>
      * Default is the value returned by {@link Locale#getDefault()}.
      */
     public Locale locale;
 
     /**
      * True if foreign key constraints are enabled.
-     *
+     * <p>
      * Default is false.
      */
     public boolean foreignKeyConstraintsEnabled;
 
     /**
      * The custom functions to register.
-     *
+     * <p>
      * This interface is deprecated; see {@link SQLiteFunction}
      */
     @Deprecated
@@ -107,7 +107,7 @@ public final class SQLiteDatabaseConfiguration {
      * Creates a database configuration with the required parameters for opening a
      * database and default values for all other parameters.
      *
-     * @param path The database path.
+     * @param path      The database path.
      * @param openFlags Open flags for the database, such as {@link SQLiteDatabase#OPEN_READWRITE}.
      */
     public SQLiteDatabaseConfiguration(String path, @SQLiteDatabase.OpenFlags int openFlags) {
@@ -128,9 +128,9 @@ public final class SQLiteDatabaseConfiguration {
      * Creates a database configuration with the required parameters for opening a
      * database and default values for all other parameters.
      *
-     * @param path The database path.
-     * @param openFlags Open flags for the database, such as {@link SQLiteDatabase#OPEN_READWRITE}.
-     * @param functions custom functions to use.
+     * @param path       The database path.
+     * @param openFlags  Open flags for the database, such as {@link SQLiteDatabase#OPEN_READWRITE}.
+     * @param functions  custom functions to use.
      * @param extensions custom extensions to use.
      */
     public SQLiteDatabaseConfiguration(String path,
@@ -188,6 +188,7 @@ public final class SQLiteDatabaseConfiguration {
 
     /**
      * Returns true if the database is in-memory.
+     *
      * @return True if the database is in-memory.
      */
     public boolean isInMemoryDb() {

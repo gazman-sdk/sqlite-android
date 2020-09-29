@@ -20,10 +20,11 @@ package io.requery.android.database;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import android.util.Pair;
-import io.requery.android.database.sqlite.SQLiteDatabase;
 
 import java.io.File;
 import java.util.List;
+
+import io.requery.android.database.sqlite.SQLiteDatabase;
 
 /**
  * Default class used to define the actions to take when the database corruption is reported

@@ -26,9 +26,9 @@ import android.database.Cursor;
 public interface SQLiteCursorDriver {
     /**
      * Executes the query returning a Cursor over the result set.
-     * 
+     *
      * @param factory The CursorFactory to use when creating the Cursors, or
-     *         null if standard SQLiteCursors should be returned.
+     *                null if standard SQLiteCursors should be returned.
      * @return a Cursor over the result set
      */
     Cursor query(SQLiteDatabase.CursorFactory factory, Object[] bindArgs);
@@ -50,6 +50,7 @@ public interface SQLiteCursorDriver {
 
     /**
      * Set new bind arguments. These will take effect in cursorRequeried().
+     *
      * @param bindArgs the new arguments
      */
     void setBindArguments(String[] bindArgs);

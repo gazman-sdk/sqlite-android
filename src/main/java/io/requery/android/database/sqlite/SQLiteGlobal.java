@@ -15,9 +15,9 @@
  */
 // modified from original source see README at the top level of this project
 /*
-** Modified to support SQLite extensions by the SQLite developers:
-** sqlite-dev@sqlite.org.
-*/
+ ** Modified to support SQLite extensions by the SQLite developers:
+ ** sqlite-dev@sqlite.org.
+ */
 
 package io.requery.android.database.sqlite;
 
@@ -26,12 +26,12 @@ import android.os.StatFs;
 /**
  * Provides access to SQLite functions that affect all database connection,
  * such as memory management.
- *
+ * <p>
  * The native code associated with SQLiteGlobal is also sets global configuration options
  * using sqlite3_config() then calls sqlite3_initialize() to ensure that the SQLite
  * library is properly initialized exactly once before any other framework or application
  * code has a chance to run.
- *
+ * <p>
  * Verbose SQLite logging is enabled if the "log.tag.SQLiteLog" property is set to "V".
  * (per {@link SQLiteDebug#DEBUG_SQL_LOG}).
  *

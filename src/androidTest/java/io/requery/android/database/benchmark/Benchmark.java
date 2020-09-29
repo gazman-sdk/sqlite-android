@@ -23,15 +23,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.provider.BaseColumns;
 import android.util.Log;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 @RunWith(AndroidJUnit4.class)
 public class Benchmark {
@@ -77,8 +78,8 @@ public class Benchmark {
         Cursor cursor = null;
         try {
             SQLiteDatabase db = platformSQLite.getReadableDatabase();
-            String[] projection = new String[] {
-                Record.COLUMN_ID, Record.COLUMN_CONTENT, Record.COLUMN_CREATED_TIME, };
+            String[] projection = new String[]{
+                    Record.COLUMN_ID, Record.COLUMN_CONTENT, Record.COLUMN_CREATED_TIME,};
             cursor = db.query(Record.TABLE_NAME, projection, null, null, null, null, null);
             readCursor(cursor);
         } finally {
@@ -86,17 +87,17 @@ public class Benchmark {
                 cursor.close();
             }
         }
-        statistics.read( trace.exit() );
+        statistics.read(trace.exit());
     }
 
     private void testAndroidSQLiteWrite(Statistics statistics) {
         Trace trace = new Trace("Android Write");
         SQLiteDatabase db = platformSQLite.getReadableDatabase();
         SQLiteStatement statement = db.compileStatement(
-            String.format("insert into %s (%s, %s) values (?,?)",
-                Record.TABLE_NAME,
-                Record.COLUMN_CONTENT,
-                Record.COLUMN_CREATED_TIME));
+                String.format("insert into %s (%s, %s) values (?,?)",
+                        Record.TABLE_NAME,
+                        Record.COLUMN_CONTENT,
+                        Record.COLUMN_CREATED_TIME));
         try {
             db.beginTransaction();
             for (int i = 0; i < COUNT; i++) {
@@ -110,17 +111,17 @@ public class Benchmark {
         } finally {
             db.endTransaction();
         }
-        statistics.write( trace.exit() );
+        statistics.write(trace.exit());
     }
 
     private void testRequerySQLiteWrite(Statistics statistics) {
         Trace trace = new Trace("requery Write");
         io.requery.android.database.sqlite.SQLiteDatabase db = requerySQLite.getWritableDatabase();
         io.requery.android.database.sqlite.SQLiteStatement statement = db.compileStatement(
-            String.format("insert into %s (%s, %s) values (?,?)",
-                Record.TABLE_NAME,
-                Record.COLUMN_CONTENT,
-                Record.COLUMN_CREATED_TIME));
+                String.format("insert into %s (%s, %s) values (?,?)",
+                        Record.TABLE_NAME,
+                        Record.COLUMN_CONTENT,
+                        Record.COLUMN_CREATED_TIME));
         try {
             db.beginTransaction();
             for (int i = 0; i < COUNT; i++) {
@@ -134,7 +135,7 @@ public class Benchmark {
         } finally {
             db.endTransaction();
         }
-        statistics.write( trace.exit() );
+        statistics.write(trace.exit());
     }
 
     private void testRequerySQLiteRead(Statistics statistics) {
@@ -143,9 +144,9 @@ public class Benchmark {
         Cursor cursor = null;
         try {
             io.requery.android.database.sqlite.SQLiteDatabase db =
-                requerySQLite.getWritableDatabase();
-            String[] projection = new String[] {
-                Record.COLUMN_ID, Record.COLUMN_CONTENT, Record.COLUMN_CREATED_TIME, };
+                    requerySQLite.getWritableDatabase();
+            String[] projection = new String[]{
+                    Record.COLUMN_ID, Record.COLUMN_CONTENT, Record.COLUMN_CREATED_TIME,};
             cursor = db.query(Record.TABLE_NAME, projection, null, null, null, null, null);
             readCursor(cursor);
         } finally {
@@ -153,11 +154,11 @@ public class Benchmark {
                 cursor.close();
             }
         }
-        statistics.read( trace.exit() );
+        statistics.read(trace.exit());
     }
 
     private static void readCursor(Cursor cursor) {
-        if(cursor != null) {
+        if (cursor != null) {
             int indexId = cursor.getColumnIndexOrThrow(Record.COLUMN_ID);
             int indexContent = cursor.getColumnIndexOrThrow(Record.COLUMN_CONTENT);
             int indexCreatedTime = cursor.getColumnIndexOrThrow(Record.COLUMN_CREATED_TIME);
@@ -173,11 +174,11 @@ public class Benchmark {
     private static class Record {
 
         private final static String CREATE_STATEMENT =
-            "CREATE TABLE '" + Record.TABLE_NAME +
-                "' ('" + BaseColumns._ID +
-                "' INTEGER PRIMARY KEY AUTOINCREMENT, '" +
-                Record.COLUMN_CONTENT + "' TEXT, '" +
-                Record.COLUMN_CREATED_TIME + "' INTEGER);";
+                "CREATE TABLE '" + Record.TABLE_NAME +
+                        "' ('" + BaseColumns._ID +
+                        "' INTEGER PRIMARY KEY AUTOINCREMENT, '" +
+                        Record.COLUMN_CONTENT + "' TEXT, '" +
+                        Record.COLUMN_CREATED_TIME + "' INTEGER);";
 
         static final String TABLE_NAME = "record";
 
@@ -242,7 +243,7 @@ public class Benchmark {
     }
 
     private static class RequerySQLite extends
-        io.requery.android.database.sqlite.SQLiteOpenHelper {
+            io.requery.android.database.sqlite.SQLiteOpenHelper {
         public RequerySQLite(Context context, String name) {
             super(context, name, null, 1);
         }
@@ -290,9 +291,9 @@ public class Benchmark {
         @Override
         public String toString() {
             return "Read AVG " + readAverageMS() +
-                " Write AVG " + writeAverageMS() + "\n" +
-                " Rows/sec " + COUNT / readAverageMS() * 1000f +
-                " Inserts/sec " + COUNT / writeAverageMS() * 1000f;
+                    " Write AVG " + writeAverageMS() + "\n" +
+                    " Rows/sec " + COUNT / readAverageMS() * 1000f +
+                    " Inserts/sec " + COUNT / writeAverageMS() * 1000f;
         }
     }
 

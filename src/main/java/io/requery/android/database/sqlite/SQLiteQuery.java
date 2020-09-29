@@ -20,8 +20,10 @@ package io.requery.android.database.sqlite;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
+
 import androidx.core.os.CancellationSignal;
 import androidx.core.os.OperationCanceledException;
+
 import io.requery.android.database.CursorWindow;
 
 /**
@@ -45,16 +47,15 @@ public final class SQLiteQuery extends SQLiteProgram {
     /**
      * Reads rows into a buffer.
      *
-     * @param window The window to fill into
-     * @param startPos The start position for filling the window.
-     * @param requiredPos The position of a row that MUST be in the window.
-     * If it won't fit, then the query should discard part of what it filled.
+     * @param window       The window to fill into
+     * @param startPos     The start position for filling the window.
+     * @param requiredPos  The position of a row that MUST be in the window.
+     *                     If it won't fit, then the query should discard part of what it filled.
      * @param countAllRows True to count all rows that the query would
-     * return regardless of whether they fit in the window.
+     *                     return regardless of whether they fit in the window.
      * @return Number of rows that were enumerated.  Might not be all rows
      * unless countAllRows is true.
-     *
-     * @throws SQLiteException if an error occurs.
+     * @throws SQLiteException            if an error occurs.
      * @throws OperationCanceledException if the operation was canceled.
      */
     int fillWindow(CursorWindow window, int startPos, int requiredPos, boolean countAllRows) {

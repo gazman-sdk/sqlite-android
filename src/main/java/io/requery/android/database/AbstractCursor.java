@@ -65,16 +65,22 @@ public abstract class AbstractCursor implements Cursor {
 
     @Override
     abstract public String getString(int column);
+
     @Override
     abstract public short getShort(int column);
+
     @Override
     abstract public int getInt(int column);
+
     @Override
     abstract public long getLong(int column);
+
     @Override
     abstract public float getFloat(int column);
+
     @Override
     abstract public double getDouble(int column);
+
     @Override
     abstract public boolean isNull(int column);
 
@@ -96,7 +102,9 @@ public abstract class AbstractCursor implements Cursor {
         onDeactivateOrClose();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected void onDeactivateOrClose() {
         if (mSelfObserver != null) {
             mContentResolver.unregisterContentObserver(mSelfObserver);
@@ -305,7 +313,6 @@ public abstract class AbstractCursor implements Cursor {
     /**
      * Subclasses must call this method when they finish committing updates to notify all
      * observers.
-     *
      */
     protected void onChange() {
         synchronized (mSelfObserverLock) {
@@ -320,9 +327,9 @@ public abstract class AbstractCursor implements Cursor {
     /**
      * Specifies a content URI to watch for changes.
      *
-     * @param cr The content resolver from the caller's context.
+     * @param cr        The content resolver from the caller's context.
      * @param notifyUri The URI to watch for changes. This can be a
-     * specific row URI, or a base URI for a whole class of content.
+     *                  specific row URI, or a base URI for a whole class of content.
      */
     @Override
     public void setNotificationUri(ContentResolver cr, Uri notifyUri) {
@@ -332,7 +339,7 @@ public abstract class AbstractCursor implements Cursor {
             if (mSelfObserver != null) {
                 mContentResolver.unregisterContentObserver(mSelfObserver);
             }
-            mSelfObserver = new  SelfContentObserver(this);
+            mSelfObserver = new SelfContentObserver(this);
             mContentResolver.registerContentObserver(mNotifyUri, true, mSelfObserver);
             mSelfObserverRegistered = true;
         }
@@ -386,7 +393,8 @@ public abstract class AbstractCursor implements Cursor {
         }
         try {
             if (!mClosed) close();
-        } catch(Exception ignored) { }
+        } catch (Exception ignored) {
+        }
     }
 
     /**

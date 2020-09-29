@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Provides debugging info about all SQLite databases running in the current process.
- *
+ * <p>
  * {@hide}
  */
 @SuppressWarnings("unused")
@@ -33,7 +33,7 @@ public final class SQLiteDebug {
 
     /**
      * Controls the printing of informational SQL log messages.
-     *
+     * <p>
      * Enable using "adb shell setprop log.tag.SQLiteLog VERBOSE".
      */
     public static final boolean DEBUG_SQL_LOG =
@@ -41,7 +41,7 @@ public final class SQLiteDebug {
 
     /**
      * Controls the printing of SQL statements as they are executed.
-     *
+     * <p>
      * Enable using "adb shell setprop log.tag.SQLiteStatements VERBOSE".
      */
     public static final boolean DEBUG_SQL_STATEMENTS =
@@ -50,7 +50,7 @@ public final class SQLiteDebug {
     /**
      * Controls the printing of wall-clock time taken to execute SQL statements
      * as they are executed.
-     *
+     * <p>
      * Enable using "adb shell setprop log.tag.SQLiteTime VERBOSE".
      */
     public static final boolean DEBUG_SQL_TIME =
@@ -58,6 +58,7 @@ public final class SQLiteDebug {
 
     /**
      * True to enable database performance testing instrumentation.
+     *
      * @hide
      */
     public static final boolean DEBUG_LOG_SLOW_QUERIES = false;
@@ -67,20 +68,21 @@ public final class SQLiteDebug {
 
     /**
      * Determines whether a query should be logged.
-     *
+     * <p>
      * Reads the "db.log.slow_query_threshold" system property, which can be changed
      * by the user at any time.  If the value is zero, then all queries will
      * be considered slow.  If the value does not exist or is negative, then no queries will
      * be considered slow.
-     *
+     * <p>
      * This value can be changed dynamically while the system is running.
      * For example, "adb shell setprop db.log.slow_query_threshold 200" will
      * log all queries that take 200ms or longer to run.
+     *
      * @hide
      */
     public static boolean shouldLogSlowQuery(long elapsedTimeMillis) {
         int slowQueryMillis = Integer.parseInt(
-            System.getProperty("db.log.slow_query_threshold", "-1"));
+                System.getProperty("db.log.slow_query_threshold", "-1"));
         return slowQueryMillis >= 0 && elapsedTimeMillis >= slowQueryMillis;
     }
 
@@ -90,12 +92,14 @@ public final class SQLiteDebug {
      * @see #nativeGetPagerStats(PagerStats)
      */
     public static class PagerStats {
-        /** the current amount of memory checked out by sqlite using sqlite3_malloc().
+        /**
+         * the current amount of memory checked out by sqlite using sqlite3_malloc().
          * documented at http://www.sqlite.org/c3ref/c_status_malloc_size.html
          */
         public int memoryUsed;
 
-        /** the number of bytes of page cache allocation which could not be sattisfied by the
+        /**
+         * the number of bytes of page cache allocation which could not be sattisfied by the
          * SQLITE_CONFIG_PAGECACHE buffer and where forced to overflow to sqlite3_malloc().
          * The returned value includes allocations that overflowed because they where too large
          * (they were larger than the "sz" parameter to SQLITE_CONFIG_PAGECACHE) and allocations
@@ -104,12 +108,14 @@ public final class SQLiteDebug {
          */
         public int pageCacheOverflow;
 
-        /** records the largest memory allocation request handed to sqlite3.
+        /**
+         * records the largest memory allocation request handed to sqlite3.
          * documented at http://www.sqlite.org/c3ref/c_status_malloc_size.html
          */
         public int largestMemAlloc;
 
-        /** a list of {@link DbStats} - one for each main database opened by the applications
+        /**
+         * a list of {@link DbStats} - one for each main database opened by the applications
          * running on the android device
          */
         public ArrayList<DbStats> dbStats;
@@ -119,23 +125,33 @@ public final class SQLiteDebug {
      * contains statistics about a database
      */
     public static class DbStats {
-        /** name of the database */
+        /**
+         * name of the database
+         */
         public String dbName;
 
-        /** the page size for the database */
+        /**
+         * the page size for the database
+         */
         public long pageSize;
 
-        /** the database size */
+        /**
+         * the database size
+         */
         public long dbSize;
 
-        /** documented here http://www.sqlite.org/c3ref/c_dbstatus_lookaside_used.html */
+        /**
+         * documented here http://www.sqlite.org/c3ref/c_dbstatus_lookaside_used.html
+         */
         public int lookaside;
 
-        /** statement cache stats: hits/misses/cachesize */
+        /**
+         * statement cache stats: hits/misses/cachesize
+         */
         public String cache;
 
         public DbStats(String dbName, long pageCount, long pageSize, int lookaside,
-            int hits, int misses, int cachesize) {
+                       int hits, int misses, int cachesize) {
             this.dbName = dbName;
             this.pageSize = pageSize / 1024;
             dbSize = (pageCount * pageSize) / 1024;
@@ -146,6 +162,7 @@ public final class SQLiteDebug {
 
     /**
      * return all pager and database stats for the current process.
+     *
      * @return {@link PagerStats}
      */
     public static PagerStats getDatabaseInfo() {
@@ -157,8 +174,9 @@ public final class SQLiteDebug {
 
     /**
      * Dumps detailed information about all databases used by the process.
+     *
      * @param printer The printer for dumping database state.
-     * @param args Command-line arguments supplied to dumpsys dbinfo
+     * @param args    Command-line arguments supplied to dumpsys dbinfo
      */
     public static void dump(Printer printer, String[] args) {
         boolean verbose = false;

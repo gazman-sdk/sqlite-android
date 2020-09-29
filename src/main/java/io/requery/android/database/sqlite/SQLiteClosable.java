@@ -21,7 +21,7 @@ import java.io.Closeable;
 
 /**
  * An object created from a SQLiteDatabase that can be closed.
- *
+ * <p>
  * This class implements a primitive reference counting scheme for database objects.
  */
 public abstract class SQLiteClosable implements Closeable {
@@ -37,10 +37,10 @@ public abstract class SQLiteClosable implements Closeable {
      * Acquires a reference to the object.
      *
      * @throws IllegalStateException if the last reference to the object has already
-     * been released.
+     *                               been released.
      */
     public void acquireReference() {
-        synchronized(this) {
+        synchronized (this) {
             if (mReferenceCount <= 0) {
                 throw new IllegalStateException(
                         "attempt to re-open an already-closed object: " + this);
@@ -57,7 +57,7 @@ public abstract class SQLiteClosable implements Closeable {
      */
     public void releaseReference() {
         boolean refCountIsZero;
-        synchronized(this) {
+        synchronized (this) {
             refCountIsZero = --mReferenceCount == 0;
         }
         if (refCountIsZero) {
@@ -68,7 +68,7 @@ public abstract class SQLiteClosable implements Closeable {
     /**
      * Releases a reference to the object, closing the object if the last reference
      * was released.
-     *
+     * <p>
      * Calling this method is equivalent to calling {@link #releaseReference}.
      *
      * @see #releaseReference()

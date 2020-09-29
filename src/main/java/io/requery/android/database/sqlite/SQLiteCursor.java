@@ -19,14 +19,15 @@ package io.requery.android.database.sqlite;
 
 import android.util.Log;
 import android.util.SparseIntArray;
-import io.requery.android.database.AbstractWindowedCursor;
-import io.requery.android.database.CursorWindow;
 
 import java.util.HashMap;
 
+import io.requery.android.database.AbstractWindowedCursor;
+import io.requery.android.database.CursorWindow;
+
 /**
  * A Cursor implementation that exposes results from a query on a {@link SQLiteDatabase}.
- *
+ * <p>
  * SQLiteCursor is not internally synchronized so code using a SQLiteCursor from multiple
  * threads should perform its own synchronization when using the SQLiteCursor.
  */
@@ -34,26 +35,40 @@ public class SQLiteCursor extends AbstractWindowedCursor {
     static final String TAG = "SQLiteCursor";
     static final int NO_COUNT = -1;
 
-    /** The names of the columns in the rows */
+    /**
+     * The names of the columns in the rows
+     */
     private final String[] mColumns;
 
-    /** The query object for the cursor */
+    /**
+     * The query object for the cursor
+     */
     private final SQLiteQuery mQuery;
 
-    /** The compiled query this cursor came from */
+    /**
+     * The compiled query this cursor came from
+     */
     private final SQLiteCursorDriver mDriver;
 
-    /** The number of rows in the cursor */
+    /**
+     * The number of rows in the cursor
+     */
     private int mCount = NO_COUNT;
 
-    /** The number of rows that can fit in the cursor window, 0 if unknown */
+    /**
+     * The number of rows that can fit in the cursor window, 0 if unknown
+     */
     private int mCursorWindowCapacity;
 
-    /** A mapping of column names to column indices, to speed up lookups */
+    /**
+     * A mapping of column names to column indices, to speed up lookups
+     */
     private SparseIntArray mColumnNameArray;
     private HashMap<String, Integer> mColumnNameMap;
 
-    /** Used to find out where a cursor was allocated in case it never got released. */
+    /**
+     * Used to find out where a cursor was allocated in case it never got released.
+     */
     private final CloseGuard mCloseGuard;
 
     /**
@@ -80,6 +95,7 @@ public class SQLiteCursor extends AbstractWindowedCursor {
 
     /**
      * Get the database that this cursor is associated with.
+     *
      * @return the SQLiteDatabase that this cursor is associated with.
      */
     public SQLiteDatabase getDatabase() {
@@ -106,7 +122,7 @@ public class SQLiteCursor extends AbstractWindowedCursor {
     }
 
     public static int cursorPickFillWindowStartPosition(
-        int cursorPosition, int cursorWindowCapacity) {
+            int cursorPosition, int cursorWindowCapacity) {
         return Math.max(cursorPosition - cursorWindowCapacity / 3, 0);
     }
 

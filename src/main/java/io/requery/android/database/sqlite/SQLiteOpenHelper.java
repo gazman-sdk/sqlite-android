@@ -20,7 +20,9 @@ package io.requery.android.database.sqlite;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
+
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
+
 import io.requery.android.database.DatabaseErrorHandler;
 
 /**
@@ -70,11 +72,11 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * {@link #getReadableDatabase} is called.
      *
      * @param context to use to open or create the database
-     * @param name of the database file, or null for an in-memory database
+     * @param name    of the database file, or null for an in-memory database
      * @param factory to use for creating cursor objects, or null for the default
      * @param version number of the database (starting at 1); if the database is older,
-     *     {@link #onUpgrade} will be used to upgrade the database; if the database is
-     *     newer, {@link #onDowngrade} will be used to downgrade the database
+     *                {@link #onUpgrade} will be used to upgrade the database; if the database is
+     *                newer, {@link #onDowngrade} will be used to downgrade the database
      */
     public SQLiteOpenHelper(Context context,
                             String name,
@@ -91,14 +93,14 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * <p>Accepts input param: a concrete instance of {@link DatabaseErrorHandler} to be
      * used to handle corruption when sqlite reports database corruption.</p>
      *
-     * @param context to use to open or create the database
-     * @param name of the database file, or null for an in-memory database
-     * @param factory to use for creating cursor objects, or null for the default
-     * @param version number of the database (starting at 1); if the database is older,
-     *     {@link #onUpgrade} will be used to upgrade the database; if the database is
-     *     newer, {@link #onDowngrade} will be used to downgrade the database
+     * @param context      to use to open or create the database
+     * @param name         of the database file, or null for an in-memory database
+     * @param factory      to use for creating cursor objects, or null for the default
+     * @param version      number of the database (starting at 1); if the database is older,
+     *                     {@link #onUpgrade} will be used to upgrade the database; if the database is
+     *                     newer, {@link #onDowngrade} will be used to downgrade the database
      * @param errorHandler the {@link DatabaseErrorHandler} to be used when sqlite reports database
-     * corruption, or null to use the default error handler.
+     *                     corruption, or null to use the default error handler.
      */
     public SQLiteOpenHelper(Context context, String name,
                             SQLiteDatabase.CursorFactory factory,
@@ -124,13 +126,12 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
 
     /**
      * Enables or disables the use of write-ahead logging for the database.
-     *
+     * <p>
      * Write-ahead logging cannot be used with read-only databases so the value of
      * this flag is ignored if the database is opened read-only.
      *
      * @param enabled True if write-ahead logging should be enabled, false if it
-     * should be disabled.
-     *
+     *                should be disabled.
      * @see SQLiteDatabase#enableWriteAheadLogging()
      */
     @Override
@@ -165,8 +166,8 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * should not call this method from the application main thread, including
      * from {@link android.content.ContentProvider#onCreate ContentProvider.onCreate()}.
      *
-     * @throws SQLiteException if the database cannot be opened for writing
      * @return a read/write database object valid until {@link #close} is called
+     * @throws SQLiteException if the database cannot be opened for writing
      */
     @Override
     public SQLiteDatabase getWritableDatabase() {
@@ -189,9 +190,9 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * application main thread, including from
      * {@link android.content.ContentProvider#onCreate ContentProvider.onCreate()}.
      *
-     * @throws SQLiteException if the database cannot be opened
      * @return a database object valid until {@link #getWritableDatabase}
-     *     or {@link #close} is called.
+     * or {@link #close} is called.
+     * @throws SQLiteException if the database cannot be opened
      */
     @Override
     public SQLiteDatabase getReadableDatabase() {
@@ -230,14 +231,14 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
                     final String path = mContext.getDatabasePath(mName).getPath();
                     if (DEBUG_STRICT_READONLY && !writable) {
                         SQLiteDatabaseConfiguration configuration =
-                            createConfiguration(path, SQLiteDatabase.OPEN_READONLY);
-                        db = SQLiteDatabase.openDatabase(configuration, mFactory,  mErrorHandler);
+                                createConfiguration(path, SQLiteDatabase.OPEN_READONLY);
+                        db = SQLiteDatabase.openDatabase(configuration, mFactory, mErrorHandler);
                     } else {
                         int flags = mEnableWriteAheadLogging ?
-                            SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING : 0;
+                                SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING : 0;
                         flags |= SQLiteDatabase.CREATE_IF_NECESSARY;
                         SQLiteDatabaseConfiguration configuration =
-                            createConfiguration(path, flags);
+                                createConfiguration(path, flags);
                         db = SQLiteDatabase.openDatabase(configuration, mFactory, mErrorHandler);
                     }
                 } catch (SQLiteException ex) {
@@ -248,7 +249,7 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
                             + " for writing (will try read-only):", ex);
                     final String path = mContext.getDatabasePath(mName).getPath();
                     SQLiteDatabaseConfiguration configuration =
-                        createConfiguration(path, SQLiteDatabase.OPEN_READONLY);
+                            createConfiguration(path, SQLiteDatabase.OPEN_READONLY);
                     db = SQLiteDatabase.openDatabase(configuration, mFactory, mErrorHandler);
                 }
             }
@@ -326,7 +327,8 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      *
      * @param db The database.
      */
-    public void onConfigure(SQLiteDatabase db) {}
+    public void onConfigure(SQLiteDatabase db) {
+    }
 
     /**
      * Called when the database is created for the first time. This is where the
@@ -352,7 +354,7 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * will automatically be rolled back.
      * </p>
      *
-     * @param db The database.
+     * @param db         The database.
      * @param oldVersion The old database version.
      * @param newVersion The new database version.
      */
@@ -370,7 +372,7 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      * will automatically be rolled back.
      * </p>
      *
-     * @param db The database.
+     * @param db         The database.
      * @param oldVersion The old database version.
      * @param newVersion The new database version.
      */
@@ -392,19 +394,20 @@ public abstract class SQLiteOpenHelper implements SupportSQLiteOpenHelper {
      *
      * @param db The database.
      */
-    public void onOpen(SQLiteDatabase db) {}
+    public void onOpen(SQLiteDatabase db) {
+    }
 
     /**
      * Called before the database is opened. Provides the {@link SQLiteDatabaseConfiguration}
      * instance that is used to initialize the database. Override this to create a configuration
      * that has custom functions or extensions.
      *
-     * @param path to database file to open and/or create
+     * @param path      to database file to open and/or create
      * @param openFlags to control database access mode
      * @return {@link SQLiteDatabaseConfiguration} instance, cannot be null.
      */
     protected SQLiteDatabaseConfiguration createConfiguration(String path,
-                                                          @SQLiteDatabase.OpenFlags int openFlags) {
+                                                              @SQLiteDatabase.OpenFlags int openFlags) {
         return new SQLiteDatabaseConfiguration(path, openFlags);
     }
 }

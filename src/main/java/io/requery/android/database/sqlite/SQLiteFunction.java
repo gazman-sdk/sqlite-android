@@ -20,31 +20,31 @@ public class SQLiteFunction {
     /**
      * Create custom function.
      *
-     * @param name The name of the sqlite3 function.
-     * @param numArgs The number of arguments for the function, or -1 to
-     * support any number of arguments.
+     * @param name     The name of the sqlite3 function.
+     * @param numArgs  The number of arguments for the function, or -1 to
+     *                 support any number of arguments.
      * @param callback The callback to invoke when the function is executed.
-     * @param flags Extra SQLITE flags to pass when creating the function
-     * in native code.
+     * @param flags    Extra SQLITE flags to pass when creating the function
+     *                 in native code.
      */
     public SQLiteFunction(String name, int numArgs,
-            SQLiteDatabase.Function callback) {
+                          SQLiteDatabase.Function callback) {
         this(name, numArgs, callback, 0);
     }
 
     /**
      * Create custom function.
      *
-     * @param name The name of the sqlite3 function.
-     * @param numArgs The number of arguments for the function, or -1 to
-     * support any number of arguments.
+     * @param name     The name of the sqlite3 function.
+     * @param numArgs  The number of arguments for the function, or -1 to
+     *                 support any number of arguments.
      * @param callback The callback to invoke when the function is executed.
-     * @param flags Extra SQLITE flags to pass when creating the function
-     * in native code.
+     * @param flags    Extra SQLITE flags to pass when creating the function
+     *                 in native code.
      */
     public SQLiteFunction(String name, int numArgs,
-            SQLiteDatabase.Function callback,
-            int flags) {
+                          SQLiteDatabase.Function callback,
+                          int flags) {
         if (name == null) {
             throw new IllegalArgumentException("name must not be null.");
         }
@@ -78,17 +78,27 @@ public class SQLiteFunction {
     }
 
     static native byte[] nativeGetArgBlob(long argsPtr, int arg);
+
     static native String nativeGetArgString(long argsPtr, int arg);
+
     static native double nativeGetArgDouble(long argsPtr, int arg);
+
     static native int nativeGetArgInt(long argsPtr, int arg);
+
     static native long nativeGetArgLong(long argsPtr, int arg);
 
     static native void nativeSetResultBlob(long contextPtr, byte[] result);
+
     static native void nativeSetResultString(long contextPtr, String result);
+
     static native void nativeSetResultDouble(long contextPtr, double result);
+
     static native void nativeSetResultInt(long contextPtr, int result);
+
     static native void nativeSetResultLong(long contextPtr, long result);
+
     static native void nativeSetResultError(long contextPtr, String error);
+
     static native void nativeSetResultNull(long contextPtr);
 
     private static class MyArgs implements SQLiteDatabase.Function.Args {
@@ -123,7 +133,7 @@ public class SQLiteFunction {
         private int checkArg(int arg) {
             if (arg < 0 || arg >= argsCount) {
                 throw new IllegalArgumentException(
-                    "Requested arg " + arg + " but had " + argsCount
+                        "Requested arg " + arg + " but had " + argsCount
                 );
             }
 

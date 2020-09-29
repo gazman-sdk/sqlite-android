@@ -17,13 +17,13 @@
 
 package io.requery.android.database;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.SmallTest;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.SmallTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +33,7 @@ public class CursorWindowTest {
     static {
         System.loadLibrary("sqlite3x");
     }
+
     public boolean isPerformanceOnly() {
         return false;
     }
@@ -92,11 +93,11 @@ public class CursorWindowTest {
         assertTrue(window.putString(Long.toString(1198032740000L), 0, 3));
         assertEquals(Long.toString(1198032740000L), window.getString(0, 3));
         assertEquals(1198032740000L, window.getLong(0, 3));
-        
+
         assertTrue(window.putString(Double.toString(42.0), 0, 4));
         assertEquals(Double.toString(42.0), window.getString(0, 4));
         assertEquals(42.0, window.getDouble(0, 4), 0);
-        
+
         // put blob
         byte[] blob = new byte[1000];
         byte value = 99;

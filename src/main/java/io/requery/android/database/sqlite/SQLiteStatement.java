@@ -21,6 +21,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.database.sqlite.SQLiteDoneException;
 import android.os.ParcelFileDescriptor;
+
 import androidx.sqlite.db.SupportSQLiteStatement;
 
 /**
@@ -83,7 +84,6 @@ public final class SQLiteStatement extends SQLiteProgram implements SupportSQLit
      * The SQL statement should be an INSERT for this to be a useful call.
      *
      * @return the row ID of the last row inserted, if this insert is successful. -1 otherwise.
-     *
      * @throws SQLException If the SQL string is invalid for some reason
      */
     @Override
@@ -105,7 +105,6 @@ public final class SQLiteStatement extends SQLiteProgram implements SupportSQLit
      * For example, SELECT COUNT(*) FROM table;
      *
      * @return The result of the query.
-     *
      * @throws SQLiteDoneException if the query returns zero rows
      */
     @Override
@@ -127,7 +126,6 @@ public final class SQLiteStatement extends SQLiteProgram implements SupportSQLit
      * For example, SELECT COUNT(*) FROM table;
      *
      * @return The result of the query.
-     *
      * @throws SQLiteDoneException if the query returns zero rows
      */
     @Override
@@ -148,8 +146,7 @@ public final class SQLiteStatement extends SQLiteProgram implements SupportSQLit
      * Executes a statement that returns a 1 by 1 table with a blob value.
      *
      * @return A read-only file descriptor for a copy of the blob value, or {@code null}
-     *         if the value is null or could not be read for some reason.
-     *
+     * if the value is null or could not be read for some reason.
      * @throws SQLiteDoneException if the query returns zero rows
      */
     public ParcelFileDescriptor simpleQueryForBlobFileDescriptor() {

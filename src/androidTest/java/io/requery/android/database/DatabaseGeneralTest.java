@@ -27,6 +27,13 @@ import android.os.Parcel;
 import android.util.Log;
 import android.util.Pair;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.filters.MediumTest;
+import androidx.test.filters.SmallTest;
+import androidx.test.filters.Suppress;
+
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -40,12 +47,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import androidx.test.filters.MediumTest;
-import androidx.test.filters.SmallTest;
-import androidx.test.filters.Suppress;
 import io.requery.android.database.sqlite.SQLiteDatabase;
 import io.requery.android.database.sqlite.SQLiteStatement;
 
@@ -194,7 +195,7 @@ public class DatabaseGeneralTest {
         ContentValues values = new ContentValues(1);
         values.put("data", "this is an updated test");
         assertEquals(1, mDatabase.update("test", SQLiteDatabase.CONFLICT_NONE, values,
-                "_id=?", new Object[] { 1 }));
+                "_id=?", new Object[]{1}));
         Cursor c = mDatabase.query("test", null, "_id=1", null, null, null, null);
         assertNotNull(c);
         assertEquals(1, c.getCount());
@@ -208,7 +209,7 @@ public class DatabaseGeneralTest {
     public void testSupportDelete() {
         populateDefaultTable();
 
-        assertEquals(1, mDatabase.delete("test", "_id=?", new Object[] { 1 }));
+        assertEquals(1, mDatabase.delete("test", "_id=?", new Object[]{1}));
         Cursor c = mDatabase.query("test", null, "_id=1", null, null, null, null);
         assertNotNull(c);
         assertEquals(0, c.getCount());
@@ -310,9 +311,9 @@ public class DatabaseGeneralTest {
         assertEquals("+" + PHONE_NUMBER, number);
         c.close();
     }
-    
-    private void phoneNumberCompare(String phone1, String phone2, boolean equal, 
-            boolean useStrictComparation) {
+
+    private void phoneNumberCompare(String phone1, String phone2, boolean equal,
+                                    boolean useStrictComparation) {
         String[] temporalPhoneNumbers = new String[2];
         temporalPhoneNumbers[0] = phone1;
         temporalPhoneNumbers[1] = phone2;
@@ -320,7 +321,7 @@ public class DatabaseGeneralTest {
         Cursor cursor = mDatabase.rawQuery(
                 String.format(Locale.ROOT,
                         "SELECT CASE WHEN PHONE_NUMBERS_EQUAL(?, ?, %d) " +
-                        "THEN 'equal' ELSE 'not equal' END",
+                                "THEN 'equal' ELSE 'not equal' END",
                         (useStrictComparation ? 1 : 0)),
                 temporalPhoneNumbers);
         try {
@@ -344,7 +345,7 @@ public class DatabaseGeneralTest {
         assertPhoneNumberEqual(phone1, phone2, true);
         assertPhoneNumberEqual(phone1, phone2, false);
     }
-    
+
     private void assertPhoneNumberEqual(String phone1, String phone2, boolean useStrict) {
         phoneNumberCompare(phone1, phone2, true, useStrict);
     }
@@ -353,7 +354,7 @@ public class DatabaseGeneralTest {
         assertPhoneNumberNotEqual(phone1, phone2, true);
         assertPhoneNumberNotEqual(phone1, phone2, false);
     }
-    
+
     private void assertPhoneNumberNotEqual(String phone1, String phone2, boolean useStrict)
             throws Exception {
         phoneNumberCompare(phone1, phone2, false, useStrict);
@@ -361,7 +362,7 @@ public class DatabaseGeneralTest {
 
     /**
      * Tests international matching issues for the PHONE_NUMBERS_EQUAL function.
-     * 
+     *
      * @throws Exception
      */
     @Suppress // PHONE_NUMBERS_EQUAL not supported
@@ -437,44 +438,44 @@ public class DatabaseGeneralTest {
         Cursor c;
 
         c = mDatabase.rawQuery("SELECT * FROM guess", null);
-        
+
         c.moveToFirst();
-        
+
         CharArrayBuffer buf = new CharArrayBuffer(14);
-        
+
         String compareTo = c.getString(c.getColumnIndexOrThrow("numi"));
         int numiIdx = c.getColumnIndexOrThrow("numi");
         int numfIdx = c.getColumnIndexOrThrow("numf");
         int strIdx = c.getColumnIndexOrThrow("str");
-        
+
         c.copyStringToBuffer(numiIdx, buf);
         assertEquals(1, buf.sizeCopied);
         assertEquals(compareTo, new String(buf.data, 0, buf.sizeCopied));
-        
+
         c.copyStringToBuffer(strIdx, buf);
         assertEquals("ZoomZoomZoomZoom", new String(buf.data, 0, buf.sizeCopied));
-        
+
         c.moveToNext();
         compareTo = c.getString(numfIdx);
-        
+
         c.copyStringToBuffer(numfIdx, buf);
         assertEquals(compareTo, new String(buf.data, 0, buf.sizeCopied));
         c.copyStringToBuffer(strIdx, buf);
         assertEquals(0, buf.sizeCopied);
-        
+
         c.moveToNext();
         c.copyStringToBuffer(numfIdx, buf);
         assertEquals(new Double(-1.0), Double.valueOf(
-            new String(buf.data, 0, buf.sizeCopied)));
-        
+                new String(buf.data, 0, buf.sizeCopied)));
+
         c.copyStringToBuffer(strIdx, buf);
         compareTo = c.getString(strIdx);
         assertEquals(chinese, compareTo);
-       
+
         assertEquals(chinese, new String(buf.data, 0, buf.sizeCopied));
         c.close();
     }
-    
+
     @MediumTest
     @Test
     public void testSchemaChange1() throws Exception {
@@ -553,7 +554,7 @@ public class DatabaseGeneralTest {
                 "token TEXT COLLATE unicode," +
                 "source INTEGER" +
                 ");");
-        
+
         Assert.assertEquals(0, longForQuery(mDatabase,
                 "SELECT _TOKENIZE(NULL, NULL, NULL, NULL)", null));
         Assert.assertEquals(0, longForQuery(mDatabase,
@@ -562,7 +563,7 @@ public class DatabaseGeneralTest {
                 "SELECT _TOKENIZE('tokens', 10, NULL, NULL)", null));
         Assert.assertEquals(0, longForQuery(mDatabase,
                 "SELECT _TOKENIZE('tokens', 10, 'some string', NULL)", null));
-     
+
         Assert.assertEquals(3, longForQuery(mDatabase,
                 "SELECT _TOKENIZE('tokens', 11, 'some string ok', ' ', 1, 'foo')", null));
         Assert.assertEquals(2, longForQuery(mDatabase,
@@ -577,18 +578,18 @@ public class DatabaseGeneralTest {
         String chinese = "\u4eac\u4ec5 \u5c3d\u5f84\u60ca";
         Assert.assertEquals(2, longForQuery(mDatabase,
                 "SELECT _TOKENIZE('tokens', 12,'" + chinese + "', ' ', 1)", null));
-        
+
         String icustr = "Fr\u00e9d\u00e9ric Hj\u00f8nnev\u00e5g";
-        
+
         Assert.assertEquals(2, longForQuery(mDatabase,
                 "SELECT _TOKENIZE('tokens', 13, '" + icustr + "', ' ', 1)", null));
-        
+
         Assert.assertEquals(9, longForQuery(mDatabase,
-                "SELECT count(*) from tokens;", null));      
+                "SELECT count(*) from tokens;", null));
 
         String key = DatabaseUtils.getHexCollationKey("Frederic Hjonneva");
         Assert.assertEquals(1, longForQuery(mDatabase,
-                "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));      
+                "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(13, longForQuery(mDatabase,
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(0, longForQuery(mDatabase,
@@ -600,9 +601,9 @@ public class DatabaseGeneralTest {
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(1, longForQuery(mDatabase,
                 "SELECT token_index from tokens where token GLOB '" + key + "*'", null));
-        
+
         key = DatabaseUtils.getHexCollationKey("some string ok");
-        Assert.assertEquals(1,  longForQuery(mDatabase,
+        Assert.assertEquals(1, longForQuery(mDatabase,
                 "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(11, longForQuery(mDatabase,
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
@@ -659,26 +660,26 @@ public class DatabaseGeneralTest {
                 "SELECT token_index from tokens where token= ?", a));
         a[0] += "*";
         Assert.assertEquals(1, longForQuery(mDatabase,
-             "SELECT count(*) from tokens where token GLOB ?", a));        
+                "SELECT count(*) from tokens where token GLOB ?", a));
         Assert.assertEquals(12, longForQuery(mDatabase,
                 "SELECT source from tokens where token GLOB ?", a));
         Assert.assertEquals(0, longForQuery(mDatabase,
                 "SELECT token_index from tokens where token GLOB ?", a));
 
-       Assert.assertEquals(1, longForQuery(mDatabase,
-                "SELECT count(*) from tokens where token= '" + key + "'", null));
-       Assert.assertEquals(12, longForQuery(mDatabase,
-               "SELECT source from tokens where token= '" + key + "'", null));
-       Assert.assertEquals(0, longForQuery(mDatabase,
-               "SELECT token_index from tokens where token= '" + key + "'", null));
-        
         Assert.assertEquals(1, longForQuery(mDatabase,
-                "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));        
+                "SELECT count(*) from tokens where token= '" + key + "'", null));
+        Assert.assertEquals(12, longForQuery(mDatabase,
+                "SELECT source from tokens where token= '" + key + "'", null));
+        Assert.assertEquals(0, longForQuery(mDatabase,
+                "SELECT token_index from tokens where token= '" + key + "'", null));
+
+        Assert.assertEquals(1, longForQuery(mDatabase,
+                "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(12, longForQuery(mDatabase,
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(0, longForQuery(mDatabase,
                 "SELECT token_index from tokens where token GLOB '" + key + "*'", null));
-        
+
         key = DatabaseUtils.getHexCollationKey("\u4eac\u4ec5");
         Assert.assertEquals(1, longForQuery(mDatabase,
                 "SELECT count(*) from tokens where token GLOB '" + key + "*'", null));
@@ -686,7 +687,7 @@ public class DatabaseGeneralTest {
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(0, longForQuery(mDatabase,
                 "SELECT token_index from tokens where token GLOB '" + key + "*'", null));
-        
+
         key = DatabaseUtils.getHexCollationKey("\u5c3d\u5f84\u60ca");
         Log.d("DatabaseGeneralTest", "key = " + key);
         Assert.assertEquals(1, longForQuery(mDatabase,
@@ -695,9 +696,9 @@ public class DatabaseGeneralTest {
                 "SELECT source from tokens where token GLOB '" + key + "*'", null));
         Assert.assertEquals(1, longForQuery(mDatabase,
                 "SELECT token_index from tokens where token GLOB '" + key + "*'", null));
-        
+
         Assert.assertEquals(0, longForQuery(mDatabase,
-                "SELECT count(*) from tokens where token GLOB 'ab*'", null));        
+                "SELECT count(*) from tokens where token GLOB 'ab*'", null));
 
         key = DatabaseUtils.getHexCollationKey("some string ok");
         Assert.assertEquals(1, longForQuery(mDatabase,
@@ -711,7 +712,7 @@ public class DatabaseGeneralTest {
         Assert.assertEquals(21, longForQuery(mDatabase,
                 "SELECT source from tokens_no_index where token GLOB '" + key + "*'", null));
     }
-    
+
     @MediumTest
     @Test
     public void testTransactions() {
@@ -740,25 +741,33 @@ public class DatabaseGeneralTest {
         Assert.assertFalse(mDatabase.isDbLockedByCurrentThread());
 
         // We should get an error if we end a non-existent transaction.
-        assertThrowsIllegalState(new Runnable() { public void run() {
-            mDatabase.endTransaction();
-        }});
+        assertThrowsIllegalState(new Runnable() {
+            public void run() {
+                mDatabase.endTransaction();
+            }
+        });
 
         // We should get an error if a set a non-existent transaction as clean.
-        assertThrowsIllegalState(new Runnable() { public void run() {
-            mDatabase.setTransactionSuccessful();
-        }});
+        assertThrowsIllegalState(new Runnable() {
+            public void run() {
+                mDatabase.setTransactionSuccessful();
+            }
+        });
 
         mDatabase.beginTransaction();
         mDatabase.setTransactionSuccessful();
         // We should get an error if we mark a transaction as clean twice.
-        assertThrowsIllegalState(new Runnable() { public void run() {
-            mDatabase.setTransactionSuccessful();
-        }});
+        assertThrowsIllegalState(new Runnable() {
+            public void run() {
+                mDatabase.setTransactionSuccessful();
+            }
+        });
         // We should get an error if we begin a transaction after marking the parent as clean.
-        assertThrowsIllegalState(new Runnable() { public void run() {
-            mDatabase.beginTransaction();
-        }});
+        assertThrowsIllegalState(new Runnable() {
+            public void run() {
+                mDatabase.beginTransaction();
+            }
+        });
         mDatabase.endTransaction();
         Assert.assertFalse(mDatabase.isDbLockedByCurrentThread());
 
@@ -887,7 +896,7 @@ public class DatabaseGeneralTest {
             t.printStackTrace();
             throw new RuntimeException(
                     "If you see this test fail, it's likely that something about " +
-                    "sqlite's PRAGMA table_info(...) command has changed.", t);
+                            "sqlite's PRAGMA table_info(...) command has changed.", t);
         }
     }
 
@@ -943,7 +952,7 @@ public class DatabaseGeneralTest {
 
     /**
      * This test is available only when the platform has a locale with the language "ja".
-     * It finishes without failure when it is not available.  
+     * It finishes without failure when it is not available.
      */
     @Suppress
     @MediumTest
@@ -966,7 +975,7 @@ public class DatabaseGeneralTest {
                     englishLocale = locale;
                 }
             }
-            
+
             if (japaneseLocale != null && englishLocale != null) {
                 break;
             }
@@ -1096,7 +1105,7 @@ public class DatabaseGeneralTest {
         String attachedDb1File = mDatabase.getPath() + "1";
         dbObj = SQLiteDatabase.openOrCreateDatabase(mDatabase.getPath(), null);
         dbObj.execSQL("ATTACH DATABASE ':memory:' as memoryDb");
-        dbObj.execSQL("ATTACH DATABASE '" +  attachedDb1File + "' as attachedDb1");
+        dbObj.execSQL("ATTACH DATABASE '" + attachedDb1File + "' as attachedDb1");
         assertTrue(dbfile.exists());
         assertTrue(new File(attachedDb1File).exists());
         assertNotNull(dbObj);
@@ -1120,7 +1129,7 @@ public class DatabaseGeneralTest {
         dbObj = SQLiteDatabase.openOrCreateDatabase(mDatabase.getPath(), null);
         dbObj.execSQL("ATTACH DATABASE ':memory:' as memoryDb");
         for (int i = 0; i < N; i++) {
-            dbObj.execSQL("ATTACH DATABASE '" +  attachedDbFiles.get(i) + "' as attachedDb" + i);
+            dbObj.execSQL("ATTACH DATABASE '" + attachedDbFiles.get(i) + "' as attachedDb" + i);
         }
         assertTrue(dbfile.exists());
         for (int i = 0; i < N; i++) {

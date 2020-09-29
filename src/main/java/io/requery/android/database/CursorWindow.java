@@ -20,6 +20,7 @@ package io.requery.android.database;
 import android.database.CharArrayBuffer;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+
 import io.requery.android.database.sqlite.SQLiteClosable;
 
 /**
@@ -30,11 +31,12 @@ public class CursorWindow extends SQLiteClosable {
 
     private static final int WINDOW_SIZE_KB = 2048;
 
-    /** The cursor window size. resource xml file specifies the value in kB.
+    /**
+     * The cursor window size. resource xml file specifies the value in kB.
      * convert it to bytes here by multiplying with 1024.
      */
     private static final int sCursorWindowSize =
-        WINDOW_SIZE_KB * 1024;
+            WINDOW_SIZE_KB * 1024;
 
     /**
      * The native CursorWindow object pointer.  (FOR INTERNAL USE ONLY)
@@ -45,25 +47,37 @@ public class CursorWindow extends SQLiteClosable {
     private final String mName;
 
     private static native long nativeCreate(String name, int cursorWindowSize);
+
     private static native void nativeDispose(long windowPtr);
 
     private static native void nativeClear(long windowPtr);
 
     private static native int nativeGetNumRows(long windowPtr);
+
     private static native boolean nativeSetNumColumns(long windowPtr, int columnNum);
+
     private static native boolean nativeAllocRow(long windowPtr);
+
     private static native void nativeFreeLastRow(long windowPtr);
 
     private static native int nativeGetType(long windowPtr, int row, int column);
+
     private static native byte[] nativeGetBlob(long windowPtr, int row, int column);
+
     private static native String nativeGetString(long windowPtr, int row, int column);
+
     private static native long nativeGetLong(long windowPtr, int row, int column);
+
     private static native double nativeGetDouble(long windowPtr, int row, int column);
 
     private static native boolean nativePutBlob(long windowPtr, byte[] value, int row, int column);
+
     private static native boolean nativePutString(long windowPtr, String value, int row, int column);
+
     private static native boolean nativePutLong(long windowPtr, long value, int row, int column);
+
     private static native boolean nativePutDouble(long windowPtr, double value, int row, int column);
+
     private static native boolean nativePutNull(long windowPtr, int row, int column);
 
     private static native String nativeGetName(long windowPtr);
@@ -178,14 +192,14 @@ public class CursorWindow extends SQLiteClosable {
      *
      * @return True if successful, false if the cursor window is out of memory.
      */
-    public boolean allocRow(){
+    public boolean allocRow() {
         return nativeAllocRow(mWindowPtr);
     }
 
     /**
      * Frees the last row in this cursor window.
      */
-    public void freeLastRow(){
+    public void freeLastRow() {
         nativeFreeLastRow(mWindowPtr);
     }
 
@@ -202,7 +216,7 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The field type.
      */
@@ -227,7 +241,7 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as a byte array.
      */
@@ -257,7 +271,7 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as a string.
      */
@@ -290,11 +304,11 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @param buffer The {@link CharArrayBuffer} to hold the string.  It is automatically
-     * resized if the requested string is larger than the buffer's current capacity.
-      */
+     *               resized if the requested string is larger than the buffer's current capacity.
+     */
     public void copyStringToBuffer(int row, int column, CharArrayBuffer buffer) {
         if (buffer == null) {
             throw new IllegalArgumentException("CharArrayBuffer should not be null");
@@ -323,7 +337,7 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as a <code>long</code>.
      */
@@ -350,7 +364,7 @@ public class CursorWindow extends SQLiteClosable {
      * </ul>
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as a <code>double</code>.
      */
@@ -366,7 +380,7 @@ public class CursorWindow extends SQLiteClosable {
      * result to <code>short</code>.
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as a <code>short</code>.
      */
@@ -382,7 +396,7 @@ public class CursorWindow extends SQLiteClosable {
      * result to <code>int</code>.
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as an <code>int</code>.
      */
@@ -398,7 +412,7 @@ public class CursorWindow extends SQLiteClosable {
      * result to <code>float</code>.
      * </p>
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return The value of the field as an <code>float</code>.
      */
@@ -409,8 +423,8 @@ public class CursorWindow extends SQLiteClosable {
     /**
      * Copies a byte array into the field at the specified row and column index.
      *
-     * @param value The value to store.
-     * @param row The zero-based row index.
+     * @param value  The value to store.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return True if successful.
      */
@@ -421,8 +435,8 @@ public class CursorWindow extends SQLiteClosable {
     /**
      * Copies a string into the field at the specified row and column index.
      *
-     * @param value The value to store.
-     * @param row The zero-based row index.
+     * @param value  The value to store.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return True if successful.
      */
@@ -433,8 +447,8 @@ public class CursorWindow extends SQLiteClosable {
     /**
      * Puts a long integer into the field at the specified row and column index.
      *
-     * @param value The value to store.
-     * @param row The zero-based row index.
+     * @param value  The value to store.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return True if successful.
      */
@@ -446,8 +460,8 @@ public class CursorWindow extends SQLiteClosable {
      * Puts a double-precision floating point value into the field at the
      * specified row and column index.
      *
-     * @param value The value to store.
-     * @param row The zero-based row index.
+     * @param value  The value to store.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return True if successful.
      */
@@ -458,7 +472,7 @@ public class CursorWindow extends SQLiteClosable {
     /**
      * Puts a null value into the field at the specified row and column index.
      *
-     * @param row The zero-based row index.
+     * @param row    The zero-based row index.
      * @param column The zero-based column index.
      * @return True if successful.
      */

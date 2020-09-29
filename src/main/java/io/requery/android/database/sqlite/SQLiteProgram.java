@@ -40,7 +40,7 @@ public abstract class SQLiteProgram extends SQLiteClosable implements SupportSQL
     private final Object[] mBindArgs;
 
     SQLiteProgram(SQLiteDatabase db, String sql, Object[] bindArgs,
-            CancellationSignal cancellationSignalForPrepare) {
+                  CancellationSignal cancellationSignalForPrepare) {
         mDatabase = db;
         mSql = sql.trim();
 
@@ -98,17 +98,23 @@ public abstract class SQLiteProgram extends SQLiteClosable implements SupportSQL
         return mColumnNames;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected final SQLiteSession getSession() {
         return mDatabase.getThreadSession();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected final int getConnectionFlags() {
         return mDatabase.getThreadDefaultConnectionFlags(mReadOnly);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected final void onCorruption() {
         mDatabase.onCorruption();
     }
@@ -127,7 +133,8 @@ public abstract class SQLiteProgram extends SQLiteClosable implements SupportSQL
     /**
      * Bind a long value to this statement. The value remains bound until
      * {@link #clearBindings} is called.
-     *addToBindArgs
+     * addToBindArgs
+     *
      * @param index The 1-based index to the parameter to bind
      * @param value The value to bind
      */
@@ -190,17 +197,17 @@ public abstract class SQLiteProgram extends SQLiteClosable implements SupportSQL
         if (value == null) {
             bindNull(index);
         } else if (value instanceof Double || value instanceof Float) {
-            bindDouble(index, ((Number)value).doubleValue());
+            bindDouble(index, ((Number) value).doubleValue());
         } else if (value instanceof Number) {
-            bindLong(index, ((Number)value).longValue());
+            bindLong(index, ((Number) value).longValue());
         } else if (value instanceof Boolean) {
-            Boolean bool = (Boolean)value;
+            Boolean bool = (Boolean) value;
             if (bool) {
                 bindLong(index, 1);
             } else {
                 bindLong(index, 0);
             }
-        } else if (value instanceof byte[]){
+        } else if (value instanceof byte[]) {
             bindBlob(index, (byte[]) value);
         } else {
             bindString(index, value.toString());

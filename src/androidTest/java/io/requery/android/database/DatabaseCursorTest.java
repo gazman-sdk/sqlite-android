@@ -25,24 +25,25 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.filters.MediumTest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import androidx.test.filters.MediumTest;
-import io.requery.android.database.sqlite.SQLiteCursor;
-import io.requery.android.database.sqlite.SQLiteCursorDriver;
-import io.requery.android.database.sqlite.SQLiteDatabase;
-import io.requery.android.database.sqlite.SQLiteQuery;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+
+import io.requery.android.database.sqlite.SQLiteCursor;
+import io.requery.android.database.sqlite.SQLiteCursorDriver;
+import io.requery.android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.SQLiteQuery;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -99,26 +100,26 @@ public class DatabaseCursorTest {
     public void testBlob() {
         // create table
         mDatabase.execSQL(
-            "CREATE TABLE test (_id INTEGER PRIMARY KEY, s TEXT, d REAL, l INTEGER, b BLOB);");
+                "CREATE TABLE test (_id INTEGER PRIMARY KEY, s TEXT, d REAL, l INTEGER, b BLOB);");
         // insert blob
         Object[] args = new Object[4];
-        
+
         byte[] blob = new byte[1000];
         byte value = 99;
-        Arrays.fill(blob, value);        
+        Arrays.fill(blob, value);
         args[3] = blob;
-        
+
         String s = "text";
         args[0] = s;
         Double d = 99.9;
         args[1] = d;
-        Long l = (long)1000;
+        Long l = (long) 1000;
         args[2] = l;
-        
+
         String sql = "INSERT INTO test (s, d, l, b) VALUES (?,?,?,?)";
         mDatabase.execSQL(sql, args);
         // use cursor to access blob
-        Cursor c = mDatabase.query("test", null, null, null, null, null, null);        
+        Cursor c = mDatabase.query("test", null, null, null, null, null, null);
         c.moveToNext();
         ContentValues cv = new ContentValues();
         //DatabaseUtils.cursorRowToContentValues(c, cv);
@@ -131,19 +132,19 @@ public class DatabaseCursorTest {
                 cv.put(columns[i], c.getString(i));
             }
         }
-        
+
         int bCol = c.getColumnIndexOrThrow("b");
         int sCol = c.getColumnIndexOrThrow("s");
         int dCol = c.getColumnIndexOrThrow("d");
         int lCol = c.getColumnIndexOrThrow("l");
-        byte[] cBlob =  c.getBlob(bCol);
+        byte[] cBlob = c.getBlob(bCol);
         assertTrue(Arrays.equals(blob, cBlob));
         assertEquals(s, c.getString(sCol));
         assertEquals(d, new Double(c.getDouble(dCol)));
-        assertEquals((long)l, c.getLong(lCol));
+        assertEquals((long) l, c.getLong(lCol));
         c.close();
     }
-    
+
     @MediumTest
     @Test
     public void testRealColumns() {
@@ -286,8 +287,8 @@ public class DatabaseCursorTest {
     @Test
     public void testManyRowsLong() {
         mDatabase.execSQL("CREATE TABLE test (_id INTEGER PRIMARY KEY, data INT);");
-        
-        final int count = 36799; 
+
+        final int count = 36799;
         mDatabase.execSQL("BEGIN Transaction;");
         for (int i = 0; i < count; i++) {
             mDatabase.execSQL("INSERT INTO test (data) VALUES (" + i + ");");
@@ -343,12 +344,12 @@ public class DatabaseCursorTest {
         assertEquals(count, c.getCount());
         c.close();
     }
-    
+
     @LargeTest
     @Test
     public void testManyRowsTxtLong() {
         mDatabase.execSQL("CREATE TABLE test (_id INTEGER PRIMARY KEY, txt TEXT, data INT);");
-        
+
         Random random = new Random(System.currentTimeMillis());
         StringBuilder randomString = new StringBuilder(1979);
         for (int i = 0; i < 1979; i++) {
@@ -382,7 +383,7 @@ public class DatabaseCursorTest {
         assertEquals(count, c.getCount());
         c.close();
     }
-   
+
     @MediumTest
     @Test
     public void testRequery() {
@@ -443,8 +444,8 @@ public class DatabaseCursorTest {
 
         SQLiteDatabase.CursorFactory factory = new SQLiteDatabase.CursorFactory() {
             public Cursor newCursor(
-                SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable,
-                SQLiteQuery query) {
+                    SQLiteDatabase db, SQLiteCursorDriver masterQuery, String editTable,
+                    SQLiteQuery query) {
                 return new SQLiteCursor(masterQuery, editTable, query) {
                     @Override
                     public boolean requery() {
@@ -475,6 +476,7 @@ public class DatabaseCursorTest {
         c.deactivate();
         c.requery();
     }
+
     /**
      * sometimes CursorWindow creation fails due to non-availability of memory create
      * another CursorWindow object. One of the scenarios of its occurrence is when

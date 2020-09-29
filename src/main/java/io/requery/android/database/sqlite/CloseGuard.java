@@ -53,7 +53,7 @@ import android.util.Log;
  *       }
  *   }
  * }</pre>
- *
+ * <p>
  * In usage where the resource to be explicitly cleaned up are
  * allocated after object construction, CloseGuard protection can
  * be deferred. For example: <pre>   {@code
@@ -89,7 +89,7 @@ import android.util.Log;
  *       }
  *   }
  * }</pre>
- *
+ * <p>
  * When used in a constructor calls to {@code open} should occur at
  * the end of the constructor since an exception that would cause
  * abrupt termination of the constructor will mean that the user will
@@ -98,7 +98,7 @@ import android.util.Log;
  * resource acquisition.
  *
  * <p>
- *
+ * <p>
  * Note that the null check on {@code guard} in the finalizer is to
  * cover cases where a constructor throws an exception causing the
  * {@code guard} to be uninitialized.
@@ -164,7 +164,8 @@ public final class CloseGuard {
         return REPORTER;
     }
 
-    private CloseGuard() {}
+    private CloseGuard() {
+    }
 
     /**
      * If CloseGuard is enabled, {@code open} initializes the instance
@@ -173,7 +174,7 @@ public final class CloseGuard {
      *
      * @param closer non-null name of explicit termination method
      * @throws NullPointerException if closer is null, regardless of
-     * whether or not CloseGuard is enabled
+     *                              whether or not CloseGuard is enabled
      */
     public void open(String closer) {
         // always perform the check for valid API usage...
@@ -211,7 +212,7 @@ public final class CloseGuard {
 
         String message =
                 ("A resource was acquired at attached stack trace but never released. "
-                 + "See java.io.Closeable for information on avoiding resource leaks.");
+                        + "See java.io.Closeable for information on avoiding resource leaks.");
 
         REPORTER.report(message, allocationSite);
     }
@@ -227,7 +228,8 @@ public final class CloseGuard {
      * Default Reporter which reports CloseGuard violations to the log.
      */
     private static final class DefaultReporter implements Reporter {
-        @Override public void report (String message, Throwable allocationSite) {
+        @Override
+        public void report(String message, Throwable allocationSite) {
             Log.w("SQLite", message, allocationSite);
         }
     }

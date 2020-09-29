@@ -22,20 +22,21 @@ import android.database.sqlite.SQLiteDiskIOException;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.Suppress;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.Suppress;
-import io.requery.android.database.sqlite.SQLiteDatabase;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import io.requery.android.database.sqlite.SQLiteDatabase;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -103,7 +104,7 @@ public class DatabaseErrorHandlerTest {
                 mDatabaseFile.delete();
             }
         } catch (SQLiteException ignored) {
-            
+
         }
         // database file should be gone
         assertFalse(mDatabaseFile.exists());

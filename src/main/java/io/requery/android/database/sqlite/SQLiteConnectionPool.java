@@ -15,9 +15,9 @@
  */
 // modified from original source see README at the top level of this project
 /*
-** Modified to support SQLite extensions by the SQLite developers: 
-** sqlite-dev@sqlite.org.
-*/
+ ** Modified to support SQLite extensions by the SQLite developers:
+ ** sqlite-dev@sqlite.org.
+ */
 
 package io.requery.android.database.sqlite;
 
@@ -26,6 +26,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Printer;
+
 import androidx.core.os.CancellationSignal;
 import androidx.core.os.OperationCanceledException;
 
@@ -166,7 +167,6 @@ public final class SQLiteConnectionPool implements Closeable {
      *
      * @param configuration The database configuration.
      * @return The connection pool.
-     *
      * @throws SQLiteException if a database error occurs.
      */
     public static SQLiteConnectionPool open(SQLiteDatabaseConfiguration configuration) {
@@ -250,7 +250,6 @@ public final class SQLiteConnectionPool implements Closeable {
      * </p>
      *
      * @param configuration The new configuration.
-     *
      * @throws IllegalStateException if the pool has been closed.
      */
     @SuppressLint("Assert")
@@ -336,18 +335,17 @@ public final class SQLiteConnectionPool implements Closeable {
      * in much unpleasantness.
      * </p>
      *
-     * @param sql If not null, try to find a connection that already has
-     * the specified SQL statement in its prepared statement cache.
-     * @param connectionFlags The connection request flags.
+     * @param sql                If not null, try to find a connection that already has
+     *                           the specified SQL statement in its prepared statement cache.
+     * @param connectionFlags    The connection request flags.
      * @param cancellationSignal A signal to cancel the operation in progress, or null if none.
      * @return The connection that was acquired, never null.
-     *
-     * @throws IllegalStateException if the pool has been closed.
-     * @throws SQLiteException if a database error occurs.
+     * @throws IllegalStateException      if the pool has been closed.
+     * @throws SQLiteException            if a database error occurs.
      * @throws OperationCanceledException if the operation was canceled.
      */
     public SQLiteConnection acquireConnection(String sql, int connectionFlags,
-            CancellationSignal cancellationSignal) {
+                                              CancellationSignal cancellationSignal) {
         return waitForConnection(sql, connectionFlags, cancellationSignal);
     }
 
@@ -359,9 +357,8 @@ public final class SQLiteConnectionPool implements Closeable {
      * </p>
      *
      * @param connection The connection to release.  Must not be null.
-     *
      * @throws IllegalStateException if the connection was not acquired
-     * from this pool or if it has already been released.
+     *                               from this pool or if it has already been released.
      */
     public void releaseConnection(SQLiteConnection connection) {
         synchronized (mLock) {
@@ -393,7 +390,7 @@ public final class SQLiteConnectionPool implements Closeable {
 
     // Can't throw.
     private boolean recycleConnectionLocked(SQLiteConnection connection,
-            AcquiredConnectionStatus status) {
+                                            AcquiredConnectionStatus status) {
         if (status == AcquiredConnectionStatus.RECONFIGURE) {
             try {
                 connection.reconfigure(mConfiguration); // might throw
@@ -414,12 +411,11 @@ public final class SQLiteConnectionPool implements Closeable {
      * Returns true if the session should yield the connection due to
      * contention over available database connections.
      *
-     * @param connection The connection owned by the session.
+     * @param connection      The connection owned by the session.
      * @param connectionFlags The connection request flags.
      * @return True if the session should yield its connection.
-     *
      * @throws IllegalStateException if the connection was not acquired
-     * from this pool or if it has already been released.
+     *                               from this pool or if it has already been released.
      */
     public boolean shouldYieldConnection(SQLiteConnection connection, int connectionFlags) {
         synchronized (mLock) {
@@ -461,7 +457,7 @@ public final class SQLiteConnectionPool implements Closeable {
 
     // Might throw.
     private SQLiteConnection openConnectionLocked(SQLiteDatabaseConfiguration configuration,
-            boolean primaryConnection) {
+                                                  boolean primaryConnection) {
         final int connectionId = mNextConnectionId++;
         return SQLiteConnection.open(this, configuration,
                 connectionId, primaryConnection); // might throw
@@ -590,7 +586,7 @@ public final class SQLiteConnectionPool implements Closeable {
 
     // Might throw.
     private SQLiteConnection waitForConnection(String sql, int connectionFlags,
-            CancellationSignal cancellationSignal) {
+                                               CancellationSignal cancellationSignal) {
         final boolean wantPrimaryConnection =
                 (connectionFlags & CONNECTION_FLAG_PRIMARY_CONNECTION_AFFINITY) != 0;
 
@@ -656,7 +652,7 @@ public final class SQLiteConnectionPool implements Closeable {
             // Rethrow an exception from the wait, if we got one.
             long busyTimeoutMillis = CONNECTION_POOL_BUSY_MILLIS;
             long nextBusyTimeoutTime = waiter.mStartTime + busyTimeoutMillis;
-            for (;;) {
+            for (; ; ) {
                 // Detect and recover from connection leaks.
                 if (mConnectionLeaked.compareAndSet(true, false)) {
                     synchronized (mLock) {
@@ -909,7 +905,7 @@ public final class SQLiteConnectionPool implements Closeable {
             mAcquiredConnections.put(connection, AcquiredConnectionStatus.NORMAL);
         } catch (RuntimeException ex) {
             Log.e(TAG, "Failed to prepare acquired connection for session, closing it: "
-                    + connection +", connectionFlags=" + connectionFlags);
+                    + connection + ", connectionFlags=" + connectionFlags);
             closeConnectionAndLogExceptionsLocked(connection);
             throw ex; // rethrow!
         }
@@ -945,7 +941,7 @@ public final class SQLiteConnectionPool implements Closeable {
 
     private void setMaxConnectionPoolSizeLocked() {
         if (!SQLiteDatabase.hasCodec()
-            && (mConfiguration.openFlags & SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING) != 0) {
+                && (mConfiguration.openFlags & SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING) != 0) {
             mMaxConnectionPoolSize = SQLiteGlobal.getWALConnectionPoolSize();
         } else {
             // TODO: We don't actually need to restrict the connection pool size to 1
@@ -964,7 +960,7 @@ public final class SQLiteConnectionPool implements Closeable {
     }
 
     private ConnectionWaiter obtainConnectionWaiterLocked(Thread thread, long startTime,
-            int priority, boolean wantPrimaryConnection, String sql, int connectionFlags) {
+                                                          int priority, boolean wantPrimaryConnection, String sql, int connectionFlags) {
         ConnectionWaiter waiter = mConnectionWaiterPool;
         if (waiter != null) {
             mConnectionWaiterPool = waiter.mNext;
@@ -995,7 +991,7 @@ public final class SQLiteConnectionPool implements Closeable {
         synchronized (mLock) {
             if (!mAcquiredConnections.isEmpty() || mAvailablePrimaryConnection == null) {
                 throw new IllegalStateException(
-                    "Cannot enable localized collators while database is in use"
+                        "Cannot enable localized collators while database is in use"
                 );
             }
             mAvailablePrimaryConnection.enableLocalizedCollators();
@@ -1047,7 +1043,7 @@ public final class SQLiteConnectionPool implements Closeable {
                 int i = 0;
                 final long now = SystemClock.uptimeMillis();
                 for (ConnectionWaiter waiter = mConnectionWaiterQueue; waiter != null;
-                        waiter = waiter.mNext, i++) {
+                     waiter = waiter.mNext, i++) {
                     printer.println(i + ": waited for "
                             + ((now - waiter.mStartTime) * 0.001f)
                             + " ms - thread=" + waiter.mThread

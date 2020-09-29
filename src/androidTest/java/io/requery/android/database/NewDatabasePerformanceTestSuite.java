@@ -17,11 +17,12 @@
 
 package io.requery.android.database;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import junit.framework.TestSuite;
+
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 @Ignore
 @RunWith(AndroidJUnit4.class)
@@ -29,70 +30,70 @@ public class NewDatabasePerformanceTestSuite extends TestSuite {
 
     public static TestSuite suite() {
         TestSuite suite =
-          new TestSuite(NewDatabasePerformanceTestSuite.class.getName());
+                new TestSuite(NewDatabasePerformanceTestSuite.class.getName());
 
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           Insert1000.class);
+                Insert1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InsertIndexed1000.class);
+                InsertIndexed1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           Select100.class);
+                Select100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringComparison100.class);
+                SelectStringComparison100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectIndex100.class);
+                SelectIndex100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InnerJoin100.class);
+                InnerJoin100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InnerJoinOneSide100.class);
+                InnerJoinOneSide100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InnerJoinNoIndex100.class);
+                InnerJoinNoIndex100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectSubQIndex100.class);
+                SelectSubQIndex100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectIndexStringComparison100.class);
+                SelectIndexStringComparison100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectInteger100.class);
+                SelectInteger100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectString100.class);
+                SelectString100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectIntegerIndex100.class);
+                SelectIntegerIndex100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectIndexString100.class);
+                SelectIndexString100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringStartsWith100.class);
+                SelectStringStartsWith100.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           DeleteIndexed1000.class);
+                DeleteIndexed1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           Delete1000.class);
+                Delete1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           DeleteWhere1000.class);
+                DeleteWhere1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           DeleteIndexWhere1000.class);
+                DeleteIndexWhere1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           UpdateIndexWhere1000.class);
+                UpdateIndexWhere1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           UpdateWhere1000.class);
+                UpdateWhere1000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InsertInteger10000.class);
+                InsertInteger10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InsertIntegerIndex10000.class);
+                InsertIntegerIndex10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InsertString10000.class);
+                InsertString10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           InsertStringIndexed10000.class);
+                InsertStringIndexed10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringStartsWith10000.class);
+                SelectStringStartsWith10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringIndexedStartsWith10000.class);
+                SelectStringIndexedStartsWith10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectInteger10000.class);
+                SelectInteger10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectIntegerIndexed10000.class);
+                SelectIntegerIndexed10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringContains10000.class);
+                SelectStringContains10000.class);
         suite.addTestSuite(NewDatabasePerformanceTests.
-                           SelectStringIndexedContains10000.class);
+                SelectStringIndexedContains10000.class);
 
         return suite;
     }

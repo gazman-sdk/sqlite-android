@@ -30,13 +30,13 @@ public final class SQLiteCustomFunction {
     /**
      * Create custom function.
      *
-     * @param name The name of the sqlite3 function.
-     * @param numArgs The number of arguments for the function, or -1 to
-     * support any number of arguments.
+     * @param name     The name of the sqlite3 function.
+     * @param numArgs  The number of arguments for the function, or -1 to
+     *                 support any number of arguments.
      * @param callback The callback to invoke when the function is executed.
      */
     public SQLiteCustomFunction(String name, int numArgs,
-            SQLiteDatabase.CustomFunction callback) {
+                                SQLiteDatabase.CustomFunction callback) {
         if (name == null) {
             throw new IllegalArgumentException("name must not be null.");
         }

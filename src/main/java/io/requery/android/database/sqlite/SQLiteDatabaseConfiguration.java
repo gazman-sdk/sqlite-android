@@ -61,7 +61,8 @@ public final class SQLiteDatabaseConfiguration {
     /**
      * The flags used to open the database.
      */
-    public @SQLiteDatabase.OpenFlags int openFlags;
+    public @SQLiteDatabase.OpenFlags
+    int openFlags;
 
     /**
      * The maximum size of the prepared statement cache for each database connection.
